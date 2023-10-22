@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="overlay">
+      <input
+        type="range"
+        min="1"
+        max="3"
+        value="1"
+        class="space-slider"
+        id="space-slider"
+        id="myRange"
+      />
+    </div>
     <canvas id="canvas"></canvas>
     <script type="module" src="main.js"></script>
-</body>
+  </body>
 </html>

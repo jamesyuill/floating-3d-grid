@@ -1,6 +1,14 @@
 * {
-    margin:0;
-    height: 100vh;
+  margin: 0;
+  height: 100vh;
+}
 
-    overflow: hidden;
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  background-color: blue;
+  height: 100px;
 }
