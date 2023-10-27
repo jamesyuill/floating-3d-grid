@@ -26,12 +26,9 @@ renderer.setClearColor(0xaaaaaa, 1);
 document.body.appendChild(renderer.domElement);
 
 //LIGHTS
-const spotLight = new THREE.DirectionalLight(0xffffff, 1);
-scene.add(spotLight);
-spotLight.position.set(0, 40, 0);
-// const sphereSize = 1;
-// const spotLightHelper = new THREE.SpotLightHelper(spotLight, sphereSize);
-// scene.add(spotLightHelper);
+const light = new THREE.DirectionalLight(0xffffff, 1);
+scene.add(light);
+light.position.set(0, 40, 0);
 
 //CAMERA CONTROLS
 const controls = new OrbitControls(camera, renderer.domElement);
