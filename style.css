@@ -4,11 +4,20 @@
 }
 
 .overlay {
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+button {
+  height: 30px;
+  width: 30px;
+}
+
+#canvas {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
-  display: flex;
-  background-color: blue;
-  height: 100px;
+  z-index: -1;
 }

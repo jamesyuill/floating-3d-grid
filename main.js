@@ -1,7 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import CubeClass from './components/cubeClass';
-const spaceSlider = document.getElementById('space-slider');
+
+const gridButtonOne = document.getElementById('grid-size-1');
+const gridButtonTwo = document.getElementById('grid-size-2');
+const gridButtonThree = document.getElementById('grid-size-3');
 
 //SCENE & CAMERA
 const scene = new THREE.Scene();
@@ -11,7 +14,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.set(0, 20, 50);
+camera.position.set(0, 30, 40);
 
 //RENDERER
 const renderer = new THREE.WebGLRenderer({
@@ -23,12 +26,12 @@ renderer.setClearColor(0xaaaaaa, 1);
 document.body.appendChild(renderer.domElement);
 
 //LIGHTS
-const spotLight = new THREE.SpotLight(0xffffff, 100, 50, 60, 2, 4);
+const spotLight = new THREE.DirectionalLight(0xffffff, 1);
 scene.add(spotLight);
-spotLight.position.set(0, 30, 0);
-const sphereSize = 1;
-const spotLightHelper = new THREE.SpotLightHelper(spotLight, sphereSize);
-scene.add(spotLightHelper);
+spotLight.position.set(0, 40, 0);
+// const sphereSize = 1;
+// const spotLightHelper = new THREE.SpotLightHelper(spotLight, sphereSize);
+// scene.add(spotLightHelper);
 
 //CAMERA CONTROLS
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -37,35 +40,65 @@ controls.dynamicDampingFactor = 0.1;
 controls.update();
 
 //GEOMETRY
+
 let space = 1;
 
-spaceSlider.addEventListener('input', (e) => {
-  space = e.target.value;
+gridButtonOne.addEventListener('click', (e) => {
+  space = 1;
+  createBoxes(space);
+});
+gridButtonTwo.addEventListener('click', () => {
+  space = 2;
+  createBoxes(space);
+});
+gridButtonThree.addEventListener('click', () => {
+  space = 3;
+  createBoxes(space);
 });
 
-let objectAmount = 100;
 let boxArray = [];
 
-for (let x = -20; x < 20; x += space) {
-  for (let z = -20; z < 20; z += space) {
-    const box = new CubeClass(x, z);
-    boxArray.push(box);
-    box.updateMatrix();
-    // box.setMatrixAt(x, box.matrix);
+function createBoxes(space) {
+  if (boxArray.length > 0) {
+    boxArray.forEach((obj) => {
+      obj.geometry.dispose();
+      obj.material.dispose();
+      scene.remove(obj);
+    });
+  }
 
-    scene.add(box);
+  for (let x = -20; x < 20; x += space) {
+    for (let z = -20; z < 20; z += space) {
+      const box = new CubeClass(x, z);
+      boxArray.push(box);
+      scene.add(box);
+    }
   }
 }
 
-setInterval(() => {
-  boxArray.forEach((item) => {
-    item.colorChange();
-  });
-}, 1000);
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
+function onPointerMove(event) {
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
+
+function changeColor() {
+  raycaster.setFromCamera(pointer, camera);
+
+  const intersects = raycaster.intersectObjects(scene.children);
+
+  if (intersects.length > 0) {
+    intersects[0].object.material.color.setHex(0xff0000);
+    setTimeout(intersects[0].object.changeBackColor, 500);
+  }
+}
 
 //ANIMATE
 function animate() {
-  // mesh.instanceMatrix.needsUpdate = true;
+  changeColor();
+
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
   controls.update();
@@ -73,6 +106,9 @@ function animate() {
 animate();
 
 //EVENT HANDLER
+
+window.addEventListener('pointermove', onPointerMove);
+
 window.addEventListener('resize', onWindowResize, false);
 
 function onWindowResize() {
